@@ -467,5 +467,3 @@
 }
 
 const h = Evolution.Builder.createElement;
-
-const text = 'monkey';
