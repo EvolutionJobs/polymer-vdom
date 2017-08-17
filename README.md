@@ -9,3 +9,11 @@ React has it's own component model, which I don't like. It seems to make a lot o
 Polymer components can be used (to some extent) in React JSX, but not the other way round. Downloading all of React (or even Preact) just to use the JSX VDOM builder is a lot of overhead. 
 
 The goal of this project is to use JSX tools (where appropriate) to build the shadow DOM in Polymer components, with minimal overhead.
+
+## Progress
+
+This project is currently underway and not ready for production:
+
+1. Create VDOM builder that can render JSX output.  DONE
+2. Create Polymer behavior/element to make this JSX easy to apply. IN PROGRESS
+3. Create tooling process to output `.html` files with embedded JSX output. NOT STARTED
