@@ -13,7 +13,8 @@
     "module": "system",
     "strictNullChecks": true,
     "jsx": "react",
-    "jsxFactory": "h"
+    "jsxFactory": "h",
+    "outFile": "polymer-vdom.js"
   },
   "exclude": [
     "node_modules",

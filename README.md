@@ -22,11 +22,9 @@ This project is currently underway and not ready for production:
 
 `<calendrical-heatmap>` has a [sample version](https://github.com/EvolutionJobs/calendrical-heatmap/blob/master/calendrical-heatmap.tsx) written using this.
 
-## Example
+## Set Up
 
-Currently only TypeScript is supported, but JSX will work using the output of [Builder.ts](Builder.ts)
-
-First set `tsconfig.json` to tell `tsc` to output `h` when parsing JSX:
+For TypeScript `*.tsx` support include [`builder.ts`](Builder.ts) and [`polymer-vdom.ts`](polymer-vdom.js), and set `tsconfig.json` to tell `tsc` to output `h` when parsing JSX:
 
 ```json
 {
@@ -37,9 +35,21 @@ First set `tsconfig.json` to tell `tsc` to output `h` when parsing JSX:
 }
 ```
 
-These are the same settings as for Preact.
+For JSX `*.jsx` support include [`polymer-vdom.js`](polymer-vdom.js), and update `.babelrc` (assuming Babel 6):
 
-Then extend `Evolution.PolymerVdom` instead of `Polymer.Element`. Inside that class you can use `render` to output JSX into the attached shadow DOM:
+```json
+{
+  "plugins": [
+    ["transform-react-jsx", { "pragma":"h" }]
+  ]
+}
+```
+
+These are the same settings as for Preact, the the config are interchangeable.
+
+## Example
+
+Extend `Evolution.PolymerVdom` instead of `Polymer.Element`. Inside that class you can use `render` to output JSX into the attached shadow DOM:
 
 ```js
 class VdomTest extends PolymerVdom {
@@ -79,4 +89,4 @@ super.render(<div><VdomTest /></div>);
 super.render(<div><vdom-test></vdom-test></div>);
 ```
 
-At the moment this code needs to be in a `.tsx` file. Next step will be build tools to add the JSX output to a `<script>` tag in and HTML import.
+At the moment this code needs to be in a `*.tsx`|`*.jsx` file. Next step will be build tools to add the JSX output to a `<script>` tag in and HTML import.
