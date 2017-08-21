@@ -6,7 +6,11 @@ namespace Evolution {
          * @param vdom The JSX output to render.
          * @returns The root DOM node created. */
         render(vdom: JSX.Element): Node {
-            return vdom.render(this.shadowRoot || this.attachShadow({ mode: 'open' }));
+            const r = this.shadowRoot || this.attachShadow({ mode: 'open' });
+            if (vdom.render && typeof vdom.render === 'function')
+                vdom.render(r);
+
+            return Evolution.Builder.render(vdom, r);
         }
     }
 }

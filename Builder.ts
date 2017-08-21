@@ -9,30 +9,6 @@
         return action.call(this, e);
     }
 
-    /** Properties and children to apply to an element. */
-    interface VirtualElementProperties {
-        /* Optional key to merge future changes by, should be unique within the parent DOM node. */
-        key?: string;
-
-        /** Properties have a string name and can have any value. */
-        [name: string]: any;
-
-        /** Children can be text, another element, or a mixed collection of either. */
-        children?: string | number | VirtualElement | (string | number | VirtualElement)[]
-    }
-
-    /** Represent a virtual element in the DOM. */
-    interface VirtualElement {
-        /** The tag name of an element or a class function to create one. */
-        type: string | { new (): HTMLElement | SVGElement };
-
-        /** Optional properties and children to apply to the element. */
-        props?: VirtualElementProperties;
-
-        /** Render this element. */
-        render(root?: HTMLElement | SVGElement): HTMLElement | SVGElement;
-    }
-
     /** Utility methods for DOM manipulation. */
     export class Builder {
 
@@ -75,8 +51,8 @@
                 if (value) element.innerHTML = value.__html || '';
             }
             else if (name[0] == 'o' && name[1] == 'n') {
-                // Starts with on...
-                name = name.toLowerCase().substring(2);
+                // Starts with on, handle React onClick or Polymer on-click
+                name = name.toLowerCase().substring(name[2] == '-' ? 3 : 2);
                 if (value && typeof value === 'function')
                     element.addEventListener(name, eventProxy);
                 else
@@ -110,7 +86,7 @@
          * @param type Either string element name, or class function to call with new keyword.
          * @param isSvg Is this element or its parent an SVG element, ignored if the type is a class.
          * @returns Result of the new declaration or the created element. */
-        private static createFromType(type: string | { new (): HTMLElement | SVGElement }, isSvg: boolean): HTMLElement | SVGElement {
+        private static createFromType(type: string | { new(): HTMLElement | SVGElement }, isSvg: boolean): HTMLElement | SVGElement {
             if (typeof type === 'function')
                 return new type();
 
@@ -164,7 +140,7 @@
          * @param {Node} ele The element to add the children to.
          * @param children The children to add.
          * @returns {number} The number of children added. */
-        private static addChildren(ele: Node, children: (string | number | VirtualElement)[]): number {
+        private static addChildren(ele: Node, children: (string | number | JSX.Element)[]): number {
             // Not diffing, just add everything
             for (const child of children)
                 ele.appendChild((typeof child === 'string' || typeof child === 'number') ?
@@ -180,7 +156,7 @@
          * @param {Node} ele The element in the DOM to compare and update the children of.
          * @param children The children to add.
          * @returns {number} The number of children added or merged. */
-        private static diffChildren(ele: Node, children: (string | number | VirtualElement)[]): number {
+        private static diffChildren(ele: Node, children: (string | number | JSX.Element)[]): number {
 
             // Simple case: merge target has no children
             const fc = ele.firstChild;
@@ -319,7 +295,7 @@
          * @param source The source content.
          * @param {Node} target The target node.
          * @returns {boolean} true if the content can be applied to the node, false otherwise. */
-        private static tagMatch(source: string | number | VirtualElement, target: Node | undefined): boolean {
+        private static tagMatch(source: string | number | JSX.Element, target: Node | undefined): boolean {
             if (!target)
                 return false;
 
@@ -344,7 +320,7 @@
          * @param {Node} [merge] Optional merge target, if passed this will be updated.
          * This internal method doesn't validate, so ensure node is valid first
          * @returns {HTMLElement|SVGElement} The DOM element added or updated. */
-        private static diffVirt(element: VirtualElement, root?: Node, merge?: Node): HTMLElement | SVGElement {
+        private static diffVirt(element: JSX.Element, root?: Node | null, merge?: Node): HTMLElement | SVGElement {
             // Is this an SVG element?
             const isSvg: boolean = element.type === 'svg' || (!!root && (root instanceof SVGElement));
 
@@ -379,7 +355,7 @@
          * @param {Node} [merge] Optional existing element to diff it against.
          * If not passed root will be checked for any DOM nodes matching the key
          * @returns {HTMLElement|SVGElement} The DOM for the rendered element. */
-        static render(element: VirtualElement, root?: Node, merge?: Node): HTMLElement | SVGElement {
+        static render(element: JSX.Element, root?: Node | null, merge?: Node): Node {
 
             if (merge) {
                 if (!root)
@@ -407,9 +383,6 @@
                 }
             }
 
-            // Is this an SVG element?
-            const isSvg: boolean = element.type === 'svg' || (!!root && (root instanceof SVGElement));
-
             // Start with the validated merge tag or create a new one
             const domEle = Builder.diffVirt(element, root, merge);
 
@@ -428,10 +401,10 @@
          * @returns {VirtualElement} The new element */
         static createElement(tag: string,
             properties: string | { [name: string]: any } | null = null,
-            ...children: ((VirtualElement | string)[] | VirtualElement | string)[]): VirtualElement {
+            ...children: ((JSX.Element | string)[] | JSX.Element | string)[]): JSX.Element {
 
             // This takes the variety of parameters generated by JSX and converts them into a consistent virtual element structure
-            const result: VirtualElement = {
+            const result: JSX.Element = {
                 type: tag.toLowerCase(),
                 render: root => Builder.render(result, root)
             };

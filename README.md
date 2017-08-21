@@ -1,10 +1,10 @@
 # Polymer VDOM
 
-I like React, especially its core idea of Virtual DOM - objects that represent the DOM and can be merged with it rapidly, allowing it to rapidly and easily build and alter large amounts of HTML. React uses JSX tools to build low level JS.
+I like React, especially its core idea of Virtual DOM - objects that represent the DOM and can be merged with it rapidly, allowing it to quickly and easily build and alter large amounts of HTML. React uses JSX tools to build low level JS.
 
-I like Polymer, expecially its core idea of **#UseThePlatform** - it extends and shims web components and shadow DOM to make them easier to build applications rapidly. Polymer doesn't help with building lots of dynamic HTML content - `dom-if` and `dom-repeat` templates are useful, but painful where a lot of content can change.
+I like Polymer, expecially its core idea of **#UseThePlatform** - it extends and shims web components and shadow DOM to make them easier to build modular applications. Polymer doesn't help with building lots of dynamic HTML content - `dom-if` and `dom-repeat` templates are useful, but painful where a lot of content can change.
 
-React has it's own component model; Polymer uses the platform's component model. It seems to make a lot of sense to use the component model that's actually built into the browser, rather than a proprietary one (even if it's good, and React's is). 
+React has its own component model; Polymer uses the platform's component model. It seems to make a lot of sense to use the component model that's actually built into the browser, rather than a proprietary one (even if it's good, and React's is). 
 
 Polymer components can be used (to some extent) in React JSX, but not the other way round (though you can add wrappers to achieve this), and there are a couple of conflicts. Downloading all of React (or even Preact) just to use the JSX VDOM builder is a lot of overhead. 
 
@@ -90,3 +90,29 @@ super.render(<div><vdom-test></vdom-test></div>);
 ```
 
 At the moment this code needs to be in a `*.tsx`|`*.jsx` file. Next step will be build tools to add the JSX output to a `<script>` tag in and HTML import.
+
+Events can use React camelCase (`onClick`) or Polymer hyphens (`on-click`).
+
+## Using Without JSX
+
+You can render VDOM without the JSX step:
+
+```js
+// Using VDOM objects
+super.render({
+  type: 'ul',
+  props: {
+    children: [
+      { type: 'li', props: { key: 'a', children: 'A' } },
+      { type: 'li', props: { key: 'b', children: 'B' } }
+    ]
+  })
+
+// Or function calls JSX outputs to
+super.render(
+  h('ul', null
+    h('li', { key: 'a' }, 'A'),
+    h('li', { key: 'b' }, 'B'))
+```
+
+It's recommended to use TypeScript (or some other type checker) if doing this to find errors at compile time. Implement `JSX.Element` from [JSX.d.ts](JSX.d.ts). 

@@ -31,7 +31,7 @@ var Evolution;
                     element.innerHTML = value.__html || '';
             }
             else if (name[0] == 'o' && name[1] == 'n') {
-                name = name.toLowerCase().substring(2);
+                name = name.toLowerCase().substring(name[2] == '-' ? 3 : 2);
                 if (value && typeof value === 'function')
                     element.addEventListener(name, eventProxy);
                 else
@@ -232,7 +232,6 @@ var Evolution;
                     }
                 }
             }
-            const isSvg = element.type === 'svg' || (!!root && (root instanceof SVGElement));
             const domEle = Builder.diffVirt(element, root, merge);
             if (root && !merge)
                 root.appendChild(domEle);
@@ -274,7 +273,10 @@ var Evolution;
 (function (Evolution) {
     class PolymerVdom extends Polymer.Element {
         render(vdom) {
-            return vdom.render(this.shadowRoot || this.attachShadow({ mode: 'open' }));
+            const r = this.shadowRoot || this.attachShadow({ mode: 'open' });
+            if (vdom.render && typeof vdom.render === 'function')
+                vdom.render(r);
+            return Evolution.Builder.render(vdom, r);
         }
     }
     Evolution.PolymerVdom = PolymerVdom;
