@@ -50,9 +50,10 @@
                 // Workaround to set inner text, best avoided
                 if (value) element.innerHTML = value.__html || '';
             }
-            else if (name[0] == 'o' && name[1] == 'n') {
-                // Starts with on, handle React onClick or Polymer on-click
-                name = name.toLowerCase().substring(name[2] == '-' ? 3 : 2);
+            else if (name[0] == 'o' && name[1] == 'n' && name.length > 2) {
+                // Starts with on, handle Preact onclick or Polymer on-click
+                // Note that React's onClick will fail, but case senstitive events will fail otherwise
+                name = name.substring(name[2] == '-' ? 3 : 2);
                 if (value && typeof value === 'function')
                     element.addEventListener(name, eventProxy);
                 else

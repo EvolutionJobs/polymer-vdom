@@ -91,7 +91,8 @@ super.render(<div><vdom-test></vdom-test></div>);
 
 At the moment this code needs to be in a `*.tsx`|`*.jsx` file. Next step will be build tools to add the JSX output to a `<script>` tag in and HTML import.
 
-Events can use React camelCase (`onClick`) or Polymer hyphens (`on-click`).
+Events can use Preact inline (`onclick`) or Polymer hyphens (`on-click`). 
+However, Polymer also requires mixed case events, which means React's camelCase (`onClick`) is not supported.
 
 ## Using Without JSX
 
