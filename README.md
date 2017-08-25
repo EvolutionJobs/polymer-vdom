@@ -49,10 +49,10 @@ These are the same settings as for Preact, the the config are interchangeable.
 
 ## Example
 
-Extend `Evolution.PolymerVdom` instead of `Polymer.Element`. Inside that class you can use `render` to output JSX into the attached shadow DOM:
+Use the mixin `WithVdom` around `Polymer.Element`, `HTMLElement` or whatever you want to extend. Inside that class you can use `render` to output JSX into the attached shadow DOM:
 
 ```js
-class VdomTest extends PolymerVdom {
+class VdomTest extends WithVdom(Polymer.Element) {
     static get is() { return 'vdom-test'; }
 
     ready() {

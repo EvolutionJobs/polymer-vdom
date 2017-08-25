@@ -10,11 +10,10 @@
       "es2017",
       "dom"
     ],
-    "module": "system",
+    "module": "es6",
     "strictNullChecks": true,
     "jsx": "react",
-    "jsxFactory": "h",
-    "outFile": "polymer-vdom.js"
+    "jsxFactory": "h"
   },
   "exclude": [
     "node_modules",

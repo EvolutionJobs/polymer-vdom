@@ -1,7 +1,7 @@
-namespace Evolution {
-    /** Polymer Virtual DOM base class. */
-    export class PolymerVdom extends Polymer.Element {
+import { Builder } from 'Builder'
 
+export function WithVdom<T extends Constructor<Element>>(Base: T) {
+    return class extends Base {
         /** Render JSX content in the shadow root of this element
          * @param vdom The JSX output to render.
          * @returns The root DOM node created. */
@@ -10,7 +10,9 @@ namespace Evolution {
             if (vdom.render && typeof vdom.render === 'function')
                 vdom.render(r);
 
-            return Evolution.Builder.render(vdom, r);
+            return Builder.render(vdom, r);
         }
     }
 }
+
+export default WithVdom;
