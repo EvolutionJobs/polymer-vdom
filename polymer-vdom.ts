@@ -1,4 +1,4 @@
-import { Builder } from 'Builder'
+import { Builder } from './Builder.js'
 
 export function WithVdom<T extends Constructor<Element>>(Base: T) {
     return class extends Base {

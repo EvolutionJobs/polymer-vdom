@@ -1,4 +1,4 @@
-import { Builder } from 'Builder';
+import { Builder } from './Builder.js';
 export function WithVdom(Base) {
     return class extends Base {
         render(vdom) {
