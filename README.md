@@ -10,14 +10,6 @@ Polymer components can be used (to some extent) in React JSX, but not the other 
 
 The goal of this project is to use JSX tools (where appropriate) to build the shadow DOM in Polymer components, with minimal overhead.
 
-## Progress
-
-This project is currently underway and not ready for production:
-
-1. Create VDOM builder that can render JSX output.  DONE
-2. Create Polymer behavior/element to make this JSX easy to apply. IN PROGRESS
-3. Create tooling process to output `.html` files with embedded JSX output. NOT STARTED
-
 ## Demo 
 
 `<calendrical-heatmap>` has a [sample version](https://github.com/EvolutionJobs/calendrical-heatmap/blob/master/calendrical-heatmap.tsx) written using this.
@@ -49,9 +41,11 @@ These are the same settings as for Preact, the the config are interchangeable.
 
 ## Example
 
-Use the mixin `WithVdom` around `Polymer.Element`, `HTMLElement` or whatever you want to extend. Inside that class you can use `render` to output JSX into the attached shadow DOM:
+Use the mixin `WithVdom` around `Polymer.Element`, `HTMLElement` or whatever you want to extend. 
+Inside that class you can use `render` to output JSX into the attached shadow DOM:
 
 ```js
+import WithVdom from './polymer-vdom.js'
 class VdomTest extends WithVdom(Polymer.Element) {
     static get is() { return 'vdom-test'; }
 
@@ -92,7 +86,7 @@ super.render(<div><vdom-test></vdom-test></div>);
 At the moment this code needs to be in a `*.tsx`|`*.jsx` file. Next step will be build tools to add the JSX output to a `<script>` tag in and HTML import.
 
 Events can use Preact inline (`onclick`) or Polymer hyphens (`on-click`). 
-However, Polymer also requires mixed case events, which means React's camelCase (`onClick`) is not supported.
+However, web components also allow mixed case events, which means React's camelCase (`onClick`) is not supported.
 
 ## Using Without JSX
 
@@ -116,4 +110,5 @@ super.render(
     h('li', { key: 'b' }, 'B'))
 ```
 
-It's recommended to use TypeScript (or some other type checker) if doing this to find errors at compile time. Implement `JSX.Element` from [JSX.d.ts](JSX.d.ts). 
+It's recommended to use TypeScript (or some other type checker) if doing this to find errors at compile time. 
+Implement `JSX.Element` from [JSX.d.ts](JSX.d.ts). 
